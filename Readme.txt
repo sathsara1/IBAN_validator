@@ -25,4 +25,4 @@
     - email: test@gmail.com
     - password: abcd1234
 
-6. The postman collection is ExcelDataUploader.postman_collection.json. You can import the collection to the postman to check the endpoints.
+6. The postman collection and the environment can be found in the Postman collection folder.Collection is ExcelDataUploader.postman_collection.json. You can import the collection and the environment to the postman to check the endpoints.
