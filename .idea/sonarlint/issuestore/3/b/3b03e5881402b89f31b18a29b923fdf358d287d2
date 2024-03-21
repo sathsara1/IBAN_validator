@@ -1,0 +1,5 @@
+
+f	php:S2003	"&Replace "require" with "require_once".(š¡®ùÿÿÿÿJ$6db33c29-dfd3-4560-acc1-be5901713b0a
+f	php:S2003"&Replace "require" with "require_once".(İÅŞèøÿÿÿÿJ$79fda29d-b716-4d01-8431-393e45492124
+Œ	php:S4833	"LReplace "require" with namespace import mechanism through the "use" keyword.(š¡®ùÿÿÿÿJ$d767c36d-4aed-4890-b06e-ce4a57beccf1
+Œ	php:S4833"QReplace "require_once" with namespace import mechanism through the "use" keyword.(ˆÙÛ×J$e0a43025-04b7-4ca1-a611-6c92f0c6581c

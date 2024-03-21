@@ -20,4 +20,9 @@
 
     docker exec <your_container_name> php artisan migrate
 
+5. Default login credentials
 
+    - email: test@gmail.com
+    - password: abcd1234
+
+6. The postman collection is ExcelDataUploader.postman_collection.json. You can import the collection to the postman to check the endpoints.
