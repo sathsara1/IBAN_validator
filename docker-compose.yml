@@ -1,27 +1,14 @@
 version: "3.8"
 
 services:
-  uploader:
-    image: 'excel-documents-uploader'
+  validator:
+    image: 'ibn-validator'
     restart: on-failure
     build:
-      context: ./ExcelDataUploader
+      context: backend
       dockerfile: Dockerfile
     volumes:
-      - ./ExcelDataUploader:/var/www/uploader
-    environment:
-      - COMPOSER_ENV=development
-
-#TODO: Add worker to the uploader
-  workeruploader:
-    image: 'excel-documents-uploader'
-    restart: on-failure
-    build:
-      context: ./ExcelDataUploader
-      dockerfile: Dockerfile
-    volumes:
-      - ./ExcelDataUploader:/var/www/uploader
-    command: bash -c 'php artisan optimize && php artisan queue:listen --tries=1'
+      - ./backend:/var/www/validator
     environment:
       - COMPOSER_ENV=development
 
@@ -51,18 +38,10 @@ services:
     ports:
       - "8085:8080"
     depends_on:
-      - uploader
+      - validator
     deploy:
       replicas: 1
 
-#  vue-frontend:
-#    build: frontend
-#    ports:
-#      - "3000:8080"
-#    volumes:
-#      - ./frontend:/app
-#    depends_on:
-#      - uploader
 
 volumes:
   mysql-data: {}

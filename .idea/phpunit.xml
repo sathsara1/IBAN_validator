@@ -4,6 +4,10 @@
     <option name="directories">
       <list>
         <option value="$PROJECT_DIR$/uploader/tests" />
+        <option value="$PROJECT_DIR$/ExcelDataUploader/tests/Unit" />
+        <option value="$PROJECT_DIR$/ExcelDataUploader/tests/Feature" />
+        <option value="$PROJECT_DIR$/backend/tests/Unit" />
+        <option value="$PROJECT_DIR$/backend/tests/Feature" />
       </list>
     </option>
   </component>

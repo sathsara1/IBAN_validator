@@ -4,168 +4,155 @@
       <form @submit.prevent="login">
         <h1>Login</h1>
         <div class="input-box">
-          <input type="text" placeholder="Email" v-model="params.email" required>
-          <i class='bx bxs-user'></i>
+          <input type="text" placeholder="Email" v-model="params.email" required />
+          <i class="bx bxs-user"></i>
         </div>
         <div class="input-box">
-          <input type="password" v-model="params.password" id="password" placeholder="password" required>
-          <i class='bx bxs-lock-alt'></i>
+          <input type="password" v-model="params.password" id="password" placeholder="Password" required />
+          <i class="bx bxs-lock-alt"></i>
         </div>
         <button type="submit" class="btn">Login</button>
-
+        <div class="register-link">
+          <p>Don't have an account?
+            <router-link to="/register">Register here</router-link>
+          </p>
+        </div>
       </form>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import Swal from 'sweetalert2';
 import { useAuthStore } from '@/stores/authStore.js';
 import { useRouter } from 'vue-router';
+
 const router = useRouter();
-
-const email = ref('')
-const hidePassword = ref(true)
-const password = ref('')
-const  params = {}
-
-const authStore = useAuthStore()
-
+const params = ref({ email: '', password: '' });
+const authStore = useAuthStore();
 
 const login = async () => {
   try {
-    await authStore.login(params).then((response) => {
-      if (response === 200) {
-
-        router.push('/upload')
-      }
-      else{
-        Swal.fire({
-          title: 'Error!',
-          text: 'Invalid credentials',
-          icon: 'error',
-        })
-      }
-    })
-
-  } catch (e) {
+    const response = await authStore.login(params.value);
+    if (response.status === 200) {
+      router.push('/validate');
+    } else {
+      Swal.fire({
+        title: 'Error!',
+        text: response.response?.data?.message || 'Invalid credentials',
+        icon: 'error',
+      });
+    }
+  } catch (error) {
     Swal.fire({
       title: 'Error!',
-      text: e,
+      text: error.response?.data?.message || 'An unexpected error occurred.',
       icon: 'error',
-    })
+    });
   }
-
-}
+};
 </script>
-<style>
 
-*
-{
-  padding: 0;
+<style>
+* {
   margin: 0;
+  padding: 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
-
 }
-body{
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1f2937, #4b5563);
+  margin: 0;
+  color: #fff;
+}
+
+#app {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background:url(https://cdn.eduonix.com/assets/images/header_img/2019022215330111057.jpg);
-  background-size: cover;
-  background-position: center;
 }
-.wrapper {
-  /* width: 420px; */
-  background: transparent;
-  border:2px solid rgba(255, 255, 255, .2);
-  backdrop-filter:blur(20px);
-  box-shadow: 0 0 10px rgba(0 , 0 , 0 , .2);
-  color: #fff;
-  border-radius: 10px;
-  padding: 30px 40px;
 
+.wrapper {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
 }
-.wrapper h1{
-  font-size: 36px;
-  text-align: center;
+
+.wrapper h1 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
 }
-.wrapper .input-box {
+
+.input-box {
   position: relative;
   width: 100%;
-  height: 50px;
-  margin: 30px 0;
+  margin-bottom: 12px;
 }
 
-.input-box input{
+.input-box input {
   width: 100%;
-  height: 100%;
-  background: transparent;
+  padding: 8px 15px;
   border: none;
+  border-radius: 25px;
   outline: none;
-  border: 2px solid rgba(255, 255, 255, .2);
-  border-radius: 40px;
-  font-size: 16px;
+  background: rgba(255, 255, 255, 0.2);
   color: #fff;
-  padding: 20px 45px 20px 20px;
+  font-size: 14px;
 }
-.input-box input::placeholder{
-  color: #fff;
+
+.input-box input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
 }
-.input-box i{
+
+.input-box i {
   position: absolute;
-  right: 20px;
   top: 50%;
+  right: 15px;
   transform: translateY(-50%);
-  font-size: 20px;
-
-}
-.wrapper .remember-forgot{
-  display: flex;
-  justify-content: space-between;
-  font-size: 14.5px;
-  margin: -15px 0 15px;
-}
-.remember-forgot label input{
-  accent-color: #fff;
-  margin-right: 3px;
-}
-.remember-forgot a{
-  color: #fff;
-  text-decoration: none;
-
-}
-.remember-forgot a:hover{
-  text-decoration: underline;
-}
-.wrapper .btn{
-  width: 100%;
-  height: 45px;
-  border-radius: 40px;
-  border: none;
-  outline: none;
-  background: #fff;
-  box-shadow: 0 0 10px rgba(0 , 0 , 0 , .1);
-  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
   font-size: 16px;
-  color: #333;
-  font-weight: 600;
 }
-.wrapper .register-link{
-  text-align: center;
-  font-size: 14.5px;
-  margin:20px 0 15px;
-}
-.register-link p a{
-  color: #fff;
-  text-decoration: none;
-  font-weight: 600;
 
+.btn {
+  width: 100%;
+  padding: 8px 0;
+  border: none;
+  border-radius: 25px;
+  background: #4caf50;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
 }
-.register-link p a:hover{
+
+.btn:hover {
+  background: #45a049;
+}
+
+.register-link {
+  margin-top: 8px;
+}
+
+.register-link p {
+  font-size: 13px;
+}
+
+.register-link a {
+  color: #4caf50;
+  text-decoration: none;
+}
+
+.register-link a:hover {
   text-decoration: underline;
 }
 </style>
