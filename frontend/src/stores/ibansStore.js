@@ -10,7 +10,7 @@ export const useIbanStore = defineStore('iban', () => {
     const successMessage = ref('');
     const searchQuery = ref('');
     const currentPage = ref(1);
-    const itemsPerPage = ref(10);
+    const itemsPerPage = ref(7);
     const authStore = useAuthStore();
 
     const filteredIbans = computed(() => {
@@ -62,7 +62,7 @@ export const useIbanStore = defineStore('iban', () => {
 
             if (data.status === 200) {
                 ibans.value = data.data;
-                currentPage.value = 1; // Reset to first page when new data is loaded
+                currentPage.value = 1;
             } else {
                 throw new Error(data.message || 'Failed to fetch IBANs');
             }

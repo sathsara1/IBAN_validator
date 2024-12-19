@@ -1,63 +1,69 @@
 <template>
-  <div class="list-iban" style="background: white; padding: 20px; color: #0e0e0e; line-height: 1.5; border: 1px solid;">
-    <h1>List of IBANs</h1>
+  <div class="list-iban-container">
+    <div class="list-iban-content">
+      <div class="header-section">
+        <h1 class="text-2xl font-bold text-gray-800">List of IBANs</h1>
+        <div class="search-box">
+          <input
+              type="text"
+              v-model="ibanStore.searchQuery"
+              placeholder="Search by IBAN, name, or email..."
+              class="search-input"
+          >
+        </div>
+      </div>
 
-    <!-- Search Box -->
-    <div class="search-box">
-      <input
-          type="text"
-          v-model="ibanStore.searchQuery"
-          placeholder="Search by IBAN, name, or email..."
-          class="search-input"
-      >
+      <div v-if="ibanStore.loading" class="loading-state">
+        <span class="loading-text">Loading...</span>
+      </div>
+
+      <div v-if="ibanStore.error" class="error-message">{{ ibanStore.error }}</div>
+
+      <div class="table-container" v-if="ibanStore.paginatedIbans.length > 0">
+        <table>
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>IBAN</th>
+            <th>User Name</th>
+            <th>Email</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="iban in ibanStore.paginatedIbans" :key="iban.id">
+            <td>{{ iban.id }}</td>
+            <td>{{ iban.iban }}</td>
+            <td>{{ iban.verified_by.name }}</td>
+            <td>{{ iban.verified_by.email }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div v-if="ibanStore.paginatedIbans.length > 0" class="pagination">
+        <button
+            :disabled="ibanStore.currentPage === 1"
+            @click="ibanStore.currentPage--"
+            class="pagination-btn"
+        >
+          Previous
+        </button>
+        <span class="page-info">
+          Page {{ ibanStore.currentPage }} of {{ ibanStore.totalPages }}
+        </span>
+        <button
+            :disabled="ibanStore.currentPage === ibanStore.totalPages"
+            @click="ibanStore.currentPage++"
+            class="pagination-btn"
+        >
+          Next
+        </button>
+      </div>
+
+      <div v-else-if="!ibanStore.loading" class="no-data">
+        No IBANs found.
+      </div>
     </div>
-
-    <div v-if="ibanStore.loading">Loading...</div>
-    <div v-if="ibanStore.error" class="error">{{ ibanStore.error }}</div>
-
-    <table v-if="ibanStore.paginatedIbans.length > 0">
-      <thead>
-      <tr>
-        <th>ID</th>
-        <th>IBAN</th>
-        <th>User Name</th>
-        <th>Email</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="iban in ibanStore.paginatedIbans" :key="iban.id">
-        <td>{{ iban.id }}</td>
-        <td>{{ iban.iban }}</td>
-        <td>{{ iban.verified_by.name }}</td>
-        <td>{{ iban.verified_by.email }}</td>
-      </tr>
-      </tbody>
-    </table>
-
-    <!-- Pagination -->
-    <div v-if="ibanStore.paginatedIbans.length > 0" class="pagination">
-      <button
-          :disabled="ibanStore.currentPage === 1"
-          @click="ibanStore.currentPage--"
-          class="pagination-btn"
-      >
-        Previous
-      </button>
-
-      <span class="page-info">
-                Page {{ ibanStore.currentPage }} of {{ ibanStore.totalPages }}
-            </span>
-
-      <button
-          :disabled="ibanStore.currentPage === ibanStore.totalPages"
-          @click="ibanStore.currentPage++"
-          class="pagination-btn"
-      >
-        Next
-      </button>
-    </div>
-
-    <div v-else-if="!ibanStore.loading">No IBANs found.</div>
   </div>
 </template>
 
@@ -73,85 +79,127 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.list-iban {
-  max-width: 1000px;
-  margin: auto;
+.list-iban-container {
+  height: 100%;
+  background-color: #f8f9fa;
+  padding: 2rem;
 }
 
-.error {
-  color: red;
-  margin: 10px 0;
+.list-iban-content {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header-section {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
 }
 
 .search-box {
-  margin: 20px 0;
+  margin-top: 1rem;
 }
 
 .search-input {
+  color: #0a0a0a;
   width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e9ecef;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  transition: border-color 0.15s ease-in-out;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.table-container {
+  flex: 1;
+  overflow-x: auto;
+  padding: 1rem;
 }
 
 table {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  background-color: white;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 th, td {
-  padding: 12px;
+  padding: 1rem;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #e9ecef;
 }
 
 th {
   background-color: #f8f9fa;
   font-weight: 600;
+  color: #0a0a0a;
 }
 
 tr:hover {
-  background-color: #f5f5f5;
+  color: #3838da;
+  background-color: #f8f9fa;
+}
+
+tr{
+  color: #0a0a0a;
 }
 
 .pagination {
+  color: #0a0a0a;
+  padding: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
-  gap: 10px;
+  gap: 1rem;
+  border-top: 1px solid #e9ecef;
 }
 
 .pagination-btn {
-  padding: 8px 16px;
-  border: 1px solid #ddd;
+  color: #0a0a0a;
+  padding: 0.5rem 1rem;
+  border: 1px solid #e9ecef;
   background-color: white;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
   cursor: pointer;
-  border-radius: 4px;
-}
-
-.pagination-btn:disabled {
-  background-color: #f5f5f5;
-  cursor: not-allowed;
+  transition: all 0.15s ease-in-out;
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background-color: #f0f0f0;
+  background-color: #f8f9fa;
+  border-color: #dee2e6;
 }
 
-.page-info {
-  margin: 0 10px;
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-/* Responsive table */
+.loading-state, .error-message, .no-data {
+  padding: 2rem;
+  text-align: center;
+  color: #6c757d;
+}
+
+.error-message {
+  color: #dc3545;
+}
+
 @media screen and (max-width: 768px) {
-  table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
+  .list-iban-container {
+    padding: 1rem;
+  }
+
+  th, td {
+    padding: 0.75rem;
   }
 }
 </style>
