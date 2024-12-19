@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="login">
     <div class="wrapper">
       <form @submit.prevent="login">
         <h1>Login</h1>
@@ -69,7 +69,7 @@ body {
   color: #fff;
 }
 
-#app {
+#login {
   display: flex;
   justify-content: center;
   align-items: center;

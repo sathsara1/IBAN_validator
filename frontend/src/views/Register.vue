@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="register">
     <div class="wrapper">
       <form @submit.prevent="register">
         <h1>Register</h1>
@@ -67,5 +67,11 @@ const register = async () => {
 </script>
 
 <style>
-/* Add your styles here similar to the Login.vue styles */
+#register {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
 </style>
