@@ -17,7 +17,7 @@
             to="/list"
             class="nav-link"
             :class="{ active: $route.path === '/list' }"
-            v-if="authStore.isAdmin"
+            v-if="isAdmin()"
         >
           <i class="fas fa-list"></i>
           <span :class="{ 'hidden': isSidebarCollapsed }">IBAN List</span>
@@ -31,7 +31,7 @@
           <i class="fas fa-bars"></i>
         </button>
         <div class="user-menu">
-          <span class="user-name">Welcome {{ authStore.user?.name }}</span>
+          <span class="user-name">Welcome {{ userName() }}</span>
           <button class="logout-btn" @click="handleLogout">
             <i class="fas fa-sign-out-alt"></i> Logout
           </button>
@@ -46,9 +46,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from "@/stores/authStore.js";
+import {ref} from 'vue';
+import {useRouter} from 'vue-router';
+import {useAuthStore} from "@/stores/authStore.js";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -62,6 +62,15 @@ const handleLogout = async () => {
   await authStore.logout();
   router.push('/');
 };
+
+const isAdmin = () => {
+ return localStorage.getItem('role') === 'admin';
+}
+
+const userName = () => {
+  return localStorage.getItem('name');
+}
+
 </script>
 
 <style scoped>
