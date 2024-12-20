@@ -61,15 +61,4 @@ trait IbanValidate
         return (int) bcmod($numericIban, '97') === 1;
     }
 
-    /**
-     * Format IBAN with spaces for readability
-     *
-     * @param string $iban
-     * @return string
-     */
-    public function formatIban(string $iban): string
-    {
-        $iban = str_replace(' ', '', strtoupper($iban));
-        return trim(chunk_split($iban, 4, ' '));
-    }
 }
